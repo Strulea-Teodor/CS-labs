@@ -8,12 +8,19 @@ Every input is validated; on invalid input the program prints a clear
 message with the allowed values and asks for the value again.
 """
 
+import textwrap
+
 import caesar
 from caesar import (
     InvalidCharacterError,
     InvalidKeyError,
     InvalidKeywordError,
 )
+
+
+def warn(message: str) -> None:
+    """Print an error message, wrapped so that it fits in the console."""
+    print(textwrap.fill(message, width=88, initial_indent="  ", subsequent_indent="      "))
 
 
 def ask(prompt: str) -> str:
@@ -30,7 +37,7 @@ def ask_task() -> str:
         choice = ask("Choose the task  [1] Caesar cipher  [2] Caesar cipher with permutation: ").strip()
         if choice in ("1", "2"):
             return choice
-        print("  Invalid choice: enter 1 or 2.")
+        warn("Invalid choice: enter 1 or 2.")
 
 
 def ask_operation() -> str:
@@ -38,7 +45,7 @@ def ask_operation() -> str:
         choice = ask("Choose the operation  [E] encrypt  [D] decrypt: ").strip().upper()
         if choice in ("E", "D"):
             return choice
-        print("  Invalid choice: enter E (encrypt) or D (decrypt).")
+        warn("Invalid choice: enter E (encrypt) or D (decrypt).")
 
 
 def ask_key() -> int:
@@ -46,7 +53,7 @@ def ask_key() -> int:
         try:
             return caesar.validate_key(ask(f"Enter key 1 (integer {caesar.MIN_KEY}-{caesar.MAX_KEY}): "))
         except InvalidKeyError as error:
-            print(f"  Invalid key: {error}.")
+            warn(f"Invalid key: {error}.")
 
 
 def ask_keyword() -> str:
@@ -56,9 +63,9 @@ def ask_keyword() -> str:
                 ask(f"Enter key 2 (keyword, at least {caesar.MIN_KEYWORD_LENGTH} Romanian letters): ")
             )
         except InvalidCharacterError as error:
-            print(f"  Invalid keyword: {error}.")
+            warn(f"Invalid keyword: {error}.")
         except InvalidKeywordError as error:
-            print(f"  Invalid keyword: {error}.")
+            warn(f"Invalid keyword: {error}.")
 
 
 def ask_text(what: str) -> str:
@@ -66,7 +73,7 @@ def ask_text(what: str) -> str:
         try:
             return caesar.normalize_text(ask(f"Enter the {what}: "))
         except InvalidCharacterError as error:
-            print(f"  Invalid text: {error}.")
+            warn(f"Invalid text: {error}.")
 
 
 def main() -> None:
