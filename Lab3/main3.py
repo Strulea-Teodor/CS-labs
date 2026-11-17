@@ -1,5 +1,11 @@
 """Console program for Laboratory Work No. 3 (Playfair and Vigenere ciphers)."""
 import polyalpha as pa
+import sys
+
+# Windows consoles/pipes often use cp1250/cp1252, which lack Ș and Ț
+for stream in (sys.stdout, sys.stderr):
+    if hasattr(stream, "reconfigure"):
+        stream.reconfigure(encoding="utf-8")
 
 LINE = "=" * 70
 
@@ -15,8 +21,7 @@ def ask_choice(prompt, options):
 def ask_key():
     while True:
         try:
-            return pa.normalize_key(input(
-                f"Enter the key (at least {pa.MIN_KEY_LENGTH} letters): "))
+            return pa.normalize_key(input(f"Enter the key (at least {pa.MIN_KEY_LENGTH} letters): "))
         except pa.CipherInputError as error:
             print(f"  Invalid key: {error}.")
 
